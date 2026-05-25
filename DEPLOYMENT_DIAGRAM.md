@@ -10,29 +10,29 @@ The diagram below illustrates the production-ready deployment architecture for t
 architecture-beta
     group client(cloud)[Client Node]
     group infra(cloud)[Infrastructure / Web Server Node]
-    group app(cloud)[Application / Backend Node]
+    group appHost(cloud)[Application Server Host - Single Server or Container]
     group data(cloud)[Data Node]
-    group security(cloud)[Security and External Services]
+    group external(cloud)[External Services]
 
     service userDevice(server)[User Device - Laptop / Mobile - Web Browser] in client
 
     service nginx(server)[Nginx Reverse Proxy - Static Assets - SSL Termination] in infra
 
-    service laravelApp(server)[Laravel 12 Application - PHP 8.2 plus FPM - Blade Templating - Eloquent ORM - Vite Built Assets] in app
-    service queueWorker(server)[Queue Worker - Background Jobs - Email Notifications - Document Generation] in app
+    service laravelApp(server)[Laravel 12 App - PHP 8.2 plus FPM - Blade and Eloquent - Auth Middleware - Session and Sanctum and RBAC - CSRF Protection] in appHost
+    service queueWorker(server)[Queue Worker - Background Jobs - Email and Documents] in appHost
 
     service mysql(database)[MySQL Database - Asset Records - User Credentials - Maintenance Logs - Audit Trails] in data
 
-    service authService(server)[Auth Service - Session Based Auth - Laravel Sanctum - CSRF Protection - Role Based Access] in security
-    service cloudStorage(disk)[Cloud Storage and Backup - File Uploads - Maintenance Images - Generated Reports - Automated Backups] in security
+    service cloudStorage(disk)[Cloud Storage and Backup - File Uploads - Maintenance Images - Generated Reports - Automated Backups] in external
 
-    userDevice:R --> L:nginx
-    nginx:R --> L:laravelApp
-    laravelApp:R --> L:mysql
-    laravelApp:B --> T:queueWorker
-    laravelApp:B --> T:authService
-    laravelApp:B --> T:cloudStorage
+    userDevice:R -- HTTPS TLS 1.2 plus --> L:nginx
+    nginx:R -- FastCGI --> L:laravelApp
+    laravelApp:R -- MySQL TCP 3306 --> L:mysql
+    laravelApp:B -- Internal Queue --> T:queueWorker
+    laravelApp:B -- HTTPS S3 API --> T:cloudStorage
 ```
+
+> **Deployment note:** The Laravel application and Queue Worker are co-located on the same application server host (or container) by default. They share the same codebase and PHP runtime. For higher throughput, queue workers can be scaled to separate hosts independently.
 
 ---
 
@@ -77,9 +77,9 @@ architecture-beta
 | **Protocol** | MySQL wire protocol over TCP (port 3306) |
 | **Backup** | Scheduled mysqldump or binary log replication to cloud storage |
 
-### 5. Security & External Services
+### 5. Authentication / Authorization (In-Process)
 
-#### 5a. Authentication / Authorization Service
+Authentication and authorization are **not a separate deployed service** — they run in-process within the Laravel application via middleware and Gate/Policy classes.
 
 | Component | Details |
 |---|---|
@@ -91,7 +91,7 @@ architecture-beta
 | **ID Obfuscation** | Hashids for public-facing resource identifiers |
 | **Encryption** | defuse/php-encryption for sensitive data at rest |
 
-#### 5b. Cloud Storage / Backup
+### 6. Cloud Storage / Backup (External Service)
 
 | Component | Details |
 |---|---|
@@ -109,8 +109,8 @@ architecture-beta
 | User Device | Nginx | **HTTPS (TLS 1.2+)** | Encrypted client requests from browser or desktop/mobile launcher |
 | Nginx | Laravel App (PHP-FPM) | **FastCGI** | Proxied application requests |
 | Laravel App | MySQL | **MySQL Protocol (TCP 3306)** | Database queries via Eloquent ORM |
-| Laravel App | Queue Worker | **Internal (database/Redis)** | Dispatched background jobs |
-| Laravel App | Auth Service | **Internal (in-process)** | Session/token validation via Laravel middleware |
+| Laravel App | Queue Worker | **Internal (database/Redis)** | Dispatched background jobs (co-located on same host) |
+| Laravel App (in-process) | Auth Middleware | **In-process** | Session/token validation via Laravel middleware — not a separate service |
 | Laravel App | Cloud Storage | **HTTPS (S3 API) / NFS** | File uploads and backup storage |
 
 ---
