@@ -1,0 +1,276 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Google Sans Flex', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --color-fms-black: #000000;
+    --color-fms-white: #ffffff;
+    --color-fms-muted: #525252;
+    --color-fms-border: #000000;
+    --color-fms-surface: #ffffff;
+    --color-fms-surface-alt: #f5f5f5;
+}
+
+@layer base {
+    html {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+        @apply bg-white text-black font-sans;
+    }
+
+    a {
+        @apply text-black;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        @apply text-black font-semibold tracking-tight;
+    }
+}
+
+@layer components {
+    .fms-shell {
+        @apply flex min-h-[calc(100dvh-9rem)] gap-0 border-t border-black;
+    }
+
+    .fms-sidebar {
+        @apply w-64 shrink-0 border-r border-black bg-white flex flex-col;
+    }
+
+    .fms-sidebar-header {
+        @apply border-b border-black px-4 py-5;
+    }
+
+    .fms-sidebar-title {
+        @apply text-xs font-semibold uppercase tracking-widest text-black;
+    }
+
+    .fms-sidebar-subtitle {
+        @apply mt-1 text-sm text-neutral-600;
+    }
+
+    .fms-sidebar-nav {
+        @apply flex-1 overflow-y-auto px-3 py-4;
+    }
+
+    .fms-nav-group {
+        @apply mb-6 last:mb-0;
+    }
+
+    .fms-nav-group-title {
+        @apply mb-2 px-2 text-[10px] font-semibold uppercase tracking-widest text-neutral-500;
+    }
+
+    .fms-nav-list {
+        @apply space-y-0.5;
+    }
+
+    .fms-nav-link {
+        @apply block rounded-sm px-3 py-2 text-sm text-black transition-colors hover:bg-neutral-100;
+    }
+
+    .fms-nav-link-active {
+        @apply bg-black text-white hover:bg-black hover:text-white;
+    }
+
+    .fms-sidebar-footer {
+        @apply border-t border-black px-4 py-4 text-xs text-neutral-600;
+    }
+
+    .fms-main {
+        @apply min-w-0 flex-1 bg-white px-6 py-6;
+    }
+
+    .fms-card {
+        @apply border border-black bg-white p-6;
+    }
+
+    .fms-card-muted {
+        @apply border border-black bg-neutral-50 p-4;
+    }
+
+    .fms-page-header {
+        @apply mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-black pb-4;
+    }
+
+    .fms-page-title {
+        @apply text-2xl font-semibold text-black;
+    }
+
+    .fms-btn {
+        @apply inline-flex items-center justify-center border border-black px-4 py-2 text-sm font-medium transition-colors;
+    }
+
+    .fms-btn-primary {
+        @apply inline-flex items-center justify-center border border-black px-4 py-2 text-sm font-medium transition-colors bg-black text-white hover:bg-white hover:text-black;
+    }
+
+    .fms-btn-secondary {
+        @apply inline-flex items-center justify-center border border-black px-4 py-2 text-sm font-medium transition-colors bg-white text-black hover:bg-black hover:text-white;
+    }
+
+    .fms-btn-danger {
+        @apply inline-flex items-center justify-center border border-black px-4 py-2 text-sm font-medium transition-colors bg-white text-black hover:bg-black hover:text-white;
+    }
+
+    .fms-link {
+        @apply text-sm text-black underline-offset-2 hover:underline;
+    }
+
+    .fms-input {
+        @apply w-full border border-black bg-white px-3 py-2 text-sm text-black placeholder:text-neutral-500 focus:border-black focus:outline-none focus:ring-1 focus:ring-black;
+    }
+
+    .fms-label {
+        @apply mb-1 block text-sm font-medium text-black;
+    }
+
+    .fms-alert {
+        @apply mb-4 border border-black px-4 py-2 text-sm text-black;
+    }
+
+    .fms-alert-success {
+        @apply mb-4 border border-black px-4 py-2 text-sm text-black bg-white;
+    }
+
+    .fms-alert-error {
+        @apply mb-4 border border-black px-4 py-2 text-sm text-black bg-neutral-100;
+    }
+
+    .fms-badge {
+        @apply inline-flex items-center border border-black px-2 py-0.5 text-xs font-medium text-black;
+    }
+
+    .fms-table-wrap {
+        @apply overflow-x-auto border border-black;
+    }
+
+    .fms-table {
+        @apply min-w-full divide-y divide-black text-sm;
+    }
+
+    .fms-table thead {
+        @apply bg-neutral-100;
+    }
+
+    .fms-table th {
+        @apply px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-black;
+    }
+
+    .fms-table td {
+        @apply px-4 py-3 text-black;
+    }
+
+    .fms-table tbody tr {
+        @apply border-t border-black;
+    }
+
+    .fms-stat-grid {
+        @apply grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3;
+    }
+
+    .fms-stat-card {
+        @apply block border border-black bg-white p-4 transition-colors hover:bg-neutral-100;
+    }
+
+    .fms-stat-card h3 {
+        @apply mb-1 text-sm font-semibold;
+    }
+
+    .fms-stat-card p {
+        @apply text-xs text-neutral-600;
+    }
+
+    .fms-field-error {
+        @apply mt-2 text-sm text-black;
+    }
+
+    .fms-form-field {
+        @apply space-y-1;
+    }
+
+    .fms-form-actions {
+        @apply flex flex-wrap items-center justify-end gap-3 border-t border-black pt-6;
+    }
+}
+
+/* Legacy views: force monochrome on colored Tailwind utilities */
+@layer utilities {
+    [class*='text-blue-'],
+    [class*='text-red-'],
+    [class*='text-green-'],
+    [class*='text-purple-'],
+    [class*='text-yellow-'],
+    [class*='text-orange-'] {
+        color: #000 !important;
+    }
+
+    [class*='hover:text-blue-']:hover,
+    [class*='hover:text-red-']:hover {
+        color: #525252 !important;
+    }
+
+    [class*='bg-blue-600'],
+    [class*='bg-green-600'],
+    [class*='bg-red-600'],
+    [class*='bg-purple-600'] {
+        background-color: #000 !important;
+        color: #fff !important;
+        border-color: #000 !important;
+    }
+
+    [class*='hover:bg-blue-700']:hover,
+    [class*='hover:bg-green-700']:hover,
+    [class*='hover:bg-red-700']:hover {
+        background-color: #fff !important;
+        color: #000 !important;
+    }
+
+    [class*='bg-blue-50'],
+    [class*='bg-green-50'],
+    [class*='bg-red-50'],
+    [class*='bg-purple-50'],
+    [class*='bg-yellow-50'],
+    [class*='bg-orange-50'],
+    [class*='bg-blue-100'],
+    [class*='bg-green-100'],
+    [class*='bg-red-100'],
+    [class*='bg-purple-100'],
+    [class*='bg-yellow-100'] {
+        background-color: #fff !important;
+        color: #000 !important;
+    }
+
+    [class*='border-blue-'],
+    [class*='border-green-'],
+    [class*='border-red-'],
+    [class*='border-purple-'],
+    [class*='border-yellow-'],
+    [class*='border-orange-'] {
+        border-color: #000 !important;
+    }
+
+    [class*='focus:ring-blue-']:focus,
+    [class*='focus:border-blue-']:focus {
+        --tw-ring-color: #000 !important;
+        border-color: #000 !important;
+    }
+
+    [class*='bg-gray-50'] {
+        background-color: #f5f5f5 !important;
+    }
+
+    [class*='divide-gray-'] > :not([hidden]) ~ :not([hidden]) {
+        border-color: #000 !important;
+    }
+}
